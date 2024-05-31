@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,22 +14,18 @@
             height: 100vh;
             margin: 0;
             background-color: white;
+            color: black;
         }
         #clock {
             font-size: 48px;
-            color: black;
         }
         #date {
             font-size: 24px;
-            color: black;
             margin-top: 10px;
         }
-        /* Styl dla trybu nocnego */
         @media (prefers-color-scheme: dark) {
             body {
                 background-color: black;
-            }
-            #clock, #date {
                 color: white;
             }
         }
@@ -46,7 +42,7 @@
             const seconds = String(now.getSeconds()).padStart(2, '0');
             document.getElementById('clock').innerText = `${hours}:${minutes}:${seconds}`;
 
-            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            const days = ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'];
             const dayName = days[now.getDay()];
             const date = String(now.getDate()).padStart(2, '0');
             document.getElementById('date').innerText = `${dayName}, ${date}`;
