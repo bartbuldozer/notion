@@ -12,11 +12,28 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: black; /* Opcjonalnie zmień tło na czarne */
         }
         #clock {
             font-size: 48px;
-            color: white; /* Zmieniono kolor tekstu na biały */
+            color: black; /* Domyślny kolor dla trybu dziennego */
+        }
+        /* Styl dla trybu nocnego */
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: black;
+            }
+            #clock {
+                color: white;
+            }
+        }
+        /* Styl dla trybu dziennego */
+        @media (prefers-color-scheme: light) {
+            body {
+                background-color: white;
+            }
+            #clock {
+                color: black;
+            }
         }
     </style>
 </head>
@@ -35,4 +52,5 @@
     </script>
 </body>
 </html>
+
 
