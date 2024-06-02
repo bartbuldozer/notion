@@ -21,10 +21,11 @@
             font-weight: bold;
             margin: 20px 0;
         }
-        .buttons, .break-buttons {
+        .top-buttons, .control-buttons {
             display: flex;
             justify-content: center;
             gap: 10px;
+            margin: 10px;
         }
         button {
             font-size: 18px;
@@ -46,23 +47,35 @@
         .break-buttons button:hover {
             background-color: #777;
         }
+        .icon-button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        .icon-button img {
+            width: 24px;
+            height: 24px;
+        }
     </style>
 </head>
 <body>
-    <div id="timer">25:00</div>
-    <div class="buttons">
-        <button onclick="startTimer()">Start</button>
-        <button onclick="stopTimer()">Stop</button>
-        <button onclick="resetTimer()">🔄</button>
-    </div>
-    <div class="break-buttons">
+    <div class="top-buttons">
+        <button onclick="setPomodoro()">Pomodoro</button>
         <button onclick="setShortBreak()">Short Break</button>
         <button onclick="setLongBreak()">Long Break</button>
+    </div>
+    <div id="timer">25:00</div>
+    <div class="control-buttons">
+        <button id="start-pause-btn" onclick="startPauseTimer()">Start</button>
+        <button class="icon-button" onclick="resetTimer()">
+            <img src="https://img.icons8.com/ios-filled/50/ffffff/restart--v1.png" alt="Reset">
+        </button>
     </div>
     <script>
         let timer;
         let timeLeft = 25 * 60;
         let isRunning = false;
+        let isPomodoro = true;
 
         function updateTimerDisplay() {
             const minutes = Math.floor(timeLeft / 60);
@@ -70,9 +83,15 @@
             document.getElementById('timer').innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
 
-        function startTimer() {
-            if (!isRunning) {
+        function startPauseTimer() {
+            const startPauseBtn = document.getElementById('start-pause-btn');
+            if (isRunning) {
+                clearInterval(timer);
+                isRunning = false;
+                startPauseBtn.textContent = 'Start';
+            } else {
                 isRunning = true;
+                startPauseBtn.textContent = 'Pause';
                 timer = setInterval(() => {
                     if (timeLeft > 0) {
                         timeLeft--;
@@ -86,29 +105,38 @@
             }
         }
 
-        function stopTimer() {
-            clearInterval(timer);
-            isRunning = false;
-        }
-
         function resetTimer() {
             clearInterval(timer);
-            timeLeft = 25 * 60;
+            timeLeft = isPomodoro ? 25 * 60 : timeLeft;
             isRunning = false;
+            document.getElementById('start-pause-btn').textContent = 'Start';
+            updateTimerDisplay();
+        }
+
+        function setPomodoro() {
+            clearInterval(timer);
+            timeLeft = 25 * 60;
+            isPomodoro = true;
+            isRunning = false;
+            document.getElementById('start-pause-btn').textContent = 'Start';
             updateTimerDisplay();
         }
 
         function setShortBreak() {
             clearInterval(timer);
             timeLeft = 5 * 60;
+            isPomodoro = false;
             isRunning = false;
+            document.getElementById('start-pause-btn').textContent = 'Start';
             updateTimerDisplay();
         }
 
         function setLongBreak() {
             clearInterval(timer);
             timeLeft = 10 * 60;
+            isPomodoro = false;
             isRunning = false;
+            document.getElementById('start-pause-btn').textContent = 'Start';
             updateTimerDisplay();
         }
 
