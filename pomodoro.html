@@ -6,39 +6,57 @@
     <title>Pomodoro Timer</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(to right, #ffecd2, #fcb69f); /* Delikatny gradient */
+            background: linear-gradient(to right, #8e44ad, #3498db); /* Fioletowo-niebieski gradient */
+            color: white;
         }
         #timer {
-            font-size: 48px;
-            color: #333;
+            font-size: 64px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
         }
         button {
-            font-size: 20px;
+            font-size: 18px;
             padding: 10px 20px;
-            margin: 10px;
+            margin: 5px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            background-color: #ff7e5f;
+            background-color: #2c3e50;
             color: white;
         }
         button:hover {
-            background-color: #ff6a45;
+            background-color: #1a242f;
+        }
+        .break-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
         }
     </style>
 </head>
 <body>
     <div id="timer">25:00</div>
-    <div>
+    <div class="buttons">
         <button onclick="startTimer()">Start</button>
         <button onclick="stopTimer()">Stop</button>
+        <button onclick="resetTimer()">🔄</button>
+    </div>
+    <div class="break-buttons">
+        <button onclick="setShortBreak()">Short Break</button>
+        <button onclick="setLongBreak()">Long Break</button>
     </div>
     <script>
         let timer;
@@ -72,8 +90,28 @@
             isRunning = false;
         }
 
+        function resetTimer() {
+            clearInterval(timer);
+            timeLeft = 25 * 60;
+            isRunning = false;
+            updateTimerDisplay();
+        }
+
+        function setShortBreak() {
+            clearInterval(timer);
+            timeLeft = 5 * 60;
+            isRunning = false;
+            updateTimerDisplay();
+        }
+
+        function setLongBreak() {
+            clearInterval(timer);
+            timeLeft = 10 * 60;
+            isRunning = false;
+            updateTimerDisplay();
+        }
+
         updateTimerDisplay();
     </script>
 </body>
 </html>
-
