@@ -34,11 +34,14 @@
             border: none;
             border-radius: 10px; /* Bardziej zaokrąglone */
             cursor: pointer;
-            background-color: #000; /* Czarny kolor */
             color: white;
         }
         button:hover {
             background-color: #333;
+        }
+        .top-buttons button {
+            background-color: transparent; /* Przezroczyste tło */
+            border: 2px solid white; /* Biała ramka */
         }
         .break-buttons button {
             background-color: #555; /* Inny kolor dla break buttons */
@@ -71,6 +74,7 @@
             <img src="https://img.icons8.com/ios-filled/50/ffffff/restart--v1.png" alt="Reset">
         </button>
     </div>
+    <audio id="alarm-sound" src="https://www.soundjay.com/button/sounds/beep-07.mp3" preload="auto"></audio>
     <script>
         let timer;
         let timeLeft = 25 * 60;
@@ -99,6 +103,7 @@
                     } else {
                         clearInterval(timer);
                         isRunning = false;
+                        document.getElementById('alarm-sound').play();
                         alert('Czas minął!');
                     }
                 }, 1000);
