@@ -32,7 +32,7 @@
             padding: 10px 20px;
             margin: 5px;
             border: none;
-            border-radius: 10px; /* Bardziej zaokrąglone */
+            border-radius: 20px; /* Bardziej zaokrąglone */
             cursor: pointer;
             color: white;
         }
@@ -46,18 +46,18 @@
         }
         .top-buttons button:hover {
             background-color: black;
-            color: white;
+            border: 2px solid black; /* Ramka zmienia kolor na czarny */
         }
         .selected {
             background-color: black;
             color: white;
         }
-        .break-buttons button {
-            background-color: #555; /* Inny kolor dla break buttons */
-            padding: 8px 16px; /* Mniejsze przyciski */
+        .control-buttons #start-pause-btn {
+            background-color: black;
+            color: white;
         }
-        .break-buttons button:hover {
-            background-color: #777;
+        .control-buttons #start-pause-btn:hover {
+            background-color: #333;
         }
         .icon-button {
             background-color: transparent;
