@@ -42,6 +42,15 @@
         .top-buttons button {
             background-color: transparent; /* Przezroczyste tło */
             border: 2px solid white; /* Biała ramka */
+            color: white;
+        }
+        .top-buttons button:hover {
+            background-color: black;
+            color: white;
+        }
+        .selected {
+            background-color: black;
+            color: white;
         }
         .break-buttons button {
             background-color: #555; /* Inny kolor dla break buttons */
@@ -63,9 +72,9 @@
 </head>
 <body>
     <div class="top-buttons">
-        <button onclick="setPomodoro()">Pomodoro</button>
-        <button onclick="setShortBreak()">Short Break</button>
-        <button onclick="setLongBreak()">Long Break</button>
+        <button id="pomodoro-btn" class="selected" onclick="setPomodoro()">Pomodoro</button>
+        <button id="short-break-btn" onclick="setShortBreak()">Short Break</button>
+        <button id="long-break-btn" onclick="setLongBreak()">Long Break</button>
     </div>
     <div id="timer">25:00</div>
     <div class="control-buttons">
@@ -125,6 +134,7 @@
             isRunning = false;
             document.getElementById('start-pause-btn').textContent = 'Start';
             updateTimerDisplay();
+            setSelectedButton('pomodoro-btn');
         }
 
         function setShortBreak() {
@@ -134,6 +144,7 @@
             isRunning = false;
             document.getElementById('start-pause-btn').textContent = 'Start';
             updateTimerDisplay();
+            setSelectedButton('short-break-btn');
         }
 
         function setLongBreak() {
@@ -143,6 +154,14 @@
             isRunning = false;
             document.getElementById('start-pause-btn').textContent = 'Start';
             updateTimerDisplay();
+            setSelectedButton('long-break-btn');
+        }
+
+        function setSelectedButton(buttonId) {
+            document.getElementById('pomodoro-btn').classList.remove('selected');
+            document.getElementById('short-break-btn').classList.remove('selected');
+            document.getElementById('long-break-btn').classList.remove('selected');
+            document.getElementById(buttonId).classList.add('selected');
         }
 
         updateTimerDisplay();
