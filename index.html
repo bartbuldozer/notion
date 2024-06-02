@@ -43,8 +43,7 @@
 
         function applyTheme() {
             const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-            document.getElementById('clock').style.color = isDarkMode ? 'white' : 'black';
-            document.getElementById('date').style.color = isDarkMode ? 'white' : 'black';
+            document.body.style.color = isDarkMode ? 'white' : 'black';
         }
 
         window.matchMedia('(prefers-color-scheme: dark)').addListener(applyTheme);
