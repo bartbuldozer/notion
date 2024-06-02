@@ -17,17 +17,10 @@
         }
         #clock {
             font-size: 48px;
-            color: black; /* Domyślny kolor tekstu */
         }
         #date {
             font-size: 24px;
             margin-top: 10px;
-            color: black; /* Domyślny kolor tekstu */
-        }
-        @media (prefers-color-scheme: dark) {
-            #clock, #date {
-                color: white; /* Kolor tekstu w trybie nocnym */
-            }
         }
     </style>
 </head>
@@ -48,6 +41,14 @@
             document.getElementById('date').innerText = `${dayName}, ${date}`;
         }
 
+        function applyTheme() {
+            const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.getElementById('clock').style.color = isDarkMode ? 'white' : 'black';
+            document.getElementById('date').style.color = isDarkMode ? 'white' : 'black';
+        }
+
+        window.matchMedia('(prefers-color-scheme: dark)').addListener(applyTheme);
+        applyTheme();
         setInterval(updateClock, 1000);
         updateClock();
     </script>
