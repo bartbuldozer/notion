@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pasek Postępu</title>
+    <title>Paski Postępu</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -31,185 +31,51 @@
 
         .progress-bar-inner {
             height: 30px;
-            width: 100%;
+            width: 0%;
             background-color: #888;
             text-align: center;
             line-height: 30px;
             color: white;
             position: relative;
             transition: width 0.5s;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
         .progress-info {
-            margin-top: 5px;
-            margin-bottom: 5px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .project-header {
-            font-size: 16px;
-            margin-right: 10px;
-        }
-
-        .days-left {
-            display: inline-block;
-        }
-
-        input, button {
-            padding: 5px;
-            margin: 5px;
-            border: 1px solid #888;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        input {
-            width: 150px;
-        }
-
-        button {
-            cursor: pointer;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        .days-in-year {
             position: absolute;
             right: 10px;
             top: 5px;
             font-size: 14px;
         }
 
-        .small-button {
-            font-size: 55%;
-            padding: 3px 5px;
+        .title {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
     <div class="progress-container">
-        <div class="progress-info">
-            <div class="project-header" id="project-header-1">Projekt:</div>
-            <button class="small-button" onclick="toggleInputs('1')">Ukryj</button>
-        </div>
-        <div class="inputs" id="inputs-1">
-            <label for="deadline-1">Deadline:</label>
-            <input type="date" id="deadline-1" oninput="updateDeadlineProgress('1')">
-            <input type="text" id="project-name-1" placeholder="Nazwa projektu" oninput="updateDeadlineProgress('1')">
-        </div>
-        <div class="progress-bar hidden" id="progress-bar-container-1">
-            <div class="progress-bar-inner">
-                <div id="days-remaining-on-bar-1">Pozostało dni: -</div>
-            </div>
-        </div>
-
-        <div class="progress-info">
-            <div class="project-header" id="project-header-2">Projekt:</div>
-            <button class="small-button" onclick="toggleInputs('2')">Ukryj</button>
-        </div>
-        <div class="inputs" id="inputs-2">
-            <label for="deadline-2">Deadline:</label>
-            <input type="date" id="deadline-2" oninput="updateDeadlineProgress('2')">
-            <input type="text" id="project-name-2" placeholder="Nazwa projektu" oninput="updateDeadlineProgress('2')">
-        </div>
-        <div class="progress-bar hidden" id="progress-bar-container-2">
-            <div class="progress-bar-inner">
-                <div id="days-remaining-on-bar-2">Pozostało dni: -</div>
-            </div>
-        </div>
-
-        <div class="progress-info">
-            <div class="project-header" id="project-header-3">Projekt:</div>
-            <button class="small-button" onclick="toggleInputs('3')">Ukryj</button>
-        </div>
-        <div class="inputs" id="inputs-3">
-            <label for="deadline-3">Deadline:</label>
-            <input type="date" id="deadline-3" oninput="updateDeadlineProgress('3')">
-            <input type="text" id="project-name-3" placeholder="Nazwa projektu" oninput="updateDeadlineProgress('3')">
-        </div>
-        <div class="progress-bar hidden" id="progress-bar-container-3">
-            <div class="progress-bar-inner">
-                <div id="days-remaining-on-bar-3">Pozostało dni: -</div>
-            </div>
-        </div>
-
+        <div class="title">Rok</div>
         <div class="progress-bar">
             <div id="year-progress-bar" class="progress-bar-inner"></div>
-            <div class="days-in-year" id="days-in-year">-</div>
+            <div class="progress-info" id="days-in-year">-</div>
+        </div>
+
+        <div class="title">Miesiąc</div>
+        <div class="progress-bar">
+            <div id="month-progress-bar" class="progress-bar-inner"></div>
+            <div class="progress-info" id="days-in-month">-</div>
+        </div>
+
+        <div class="title">Tydzień</div>
+        <div class="progress-bar">
+            <div id="week-progress-bar" class="progress-bar-inner"></div>
+            <div class="progress-info" id="days-in-week">-</div>
         </div>
     </div>
 
     <script>
-        function setCookie(name, value, days) {
-            const d = new Date();
-            d.setTime(d.getTime() + (days*24*60*60*1000));
-            const expires = "expires=" + d.toUTCString();
-            document.cookie = name + "=" + value + ";" + expires + ";path=/";
-        }
-
-        function getCookie(name) {
-            const cname = name + "=";
-            const decodedCookie = decodeURIComponent(document.cookie);
-            const ca = decodedCookie.split(';');
-            for(let i = 0; i < ca.length; i++) {
-                let c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(cname) == 0) {
-                    return c.substring(cname.length, c.length);
-                }
-            }
-            return "";
-        }
-
-        function updateDeadlineProgress(id) {
-            const deadlineInput = document.getElementById('deadline-' + id).value;
-            const projectName = document.getElementById('project-name-' + id).value;
-            if (deadlineInput && projectName) {
-                const now = new Date();
-                const deadline = new Date(deadlineInput);
-                const totalTimeInMs = deadline - now;
-                const totalTimeInDays = Math.ceil(totalTimeInMs / (1000 * 60 * 60 * 24));
-
-                document.getElementById('project-header-' + id).textContent = `Projekt: ${projectName}`;
-                document.getElementById('days-remaining-on-bar-' + id).textContent = `Pozostało dni: ${totalTimeInDays > 0 ? totalTimeInDays : 0}`;
-                document.getElementById('days-remaining-on-bar-' + id).style.color = '#ffffff';
-                setCookie(`project${id}-name`, projectName, 365);
-                setCookie(`project${id}-deadline`, deadlineInput, 365);
-            } else {
-                document.getElementById('project-header-' + id).textContent = 'Projekt:';
-                document.getElementById('days-remaining-on-bar-' + id).textContent = 'Pozostało dni: -';
-                document.getElementById('days-remaining-on-bar-' + id).style.color = '#ffffff';
-                setCookie(`project${id}-name`, "", -1);
-                setCookie(`project${id}-deadline`, "", -1);
-            }
-        }
-
-        function toggleInputs(id) {
-            const inputs = document.getElementById('inputs-' + id);
-            const progressBarContainer = document.getElementById('progress-bar-container-' + id);
-            const button = document.querySelector(`.progress-info:nth-of-type(${id * 2 - 1}) .small-button`);
-
-            inputs.classList.toggle('hidden');
-            progressBarContainer.classList.toggle('hidden');
-
-            if (inputs.classList.contains('hidden')) {
-                button.textContent = 'Pokaż';
-            } else {
-                button.textContent = 'Ukryj';
-            }
-
-            updateDeadlineProgress(id); // Update progress bar when toggling inputs
-        }
-
         function updateYearProgress() {
             const now = new Date();
             const startOfYear = new Date(now.getFullYear(), 0, 1);
@@ -218,9 +84,42 @@
             const dayOfYear = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
             const yearProgressPercentage = (dayOfYear / totalDaysInYear) * 100;
 
-            document.getElementById('days-in-year').textContent = `${dayOfYear}/365`;
+            document.getElementById('days-in-year').textContent = `${dayOfYear}/${totalDaysInYear}`;
             document.getElementById('year-progress-bar').style.width = `${yearProgressPercentage}%`;
         }
 
-        function loadSavedData() {
-            for
+        function updateMonthProgress() {
+            const now = new Date();
+            const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+            const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+            const totalDaysInMonth = (endOfMonth - startOfMonth) / (1000 * 60 * 60 * 24) + 1;
+            const dayOfMonth = now.getDate();
+            const monthProgressPercentage = (dayOfMonth / totalDaysInMonth) * 100;
+
+            document.getElementById('days-in-month').textContent = `${dayOfMonth}/${totalDaysInMonth}`;
+            document.getElementById('month-progress-bar').style.width = `${monthProgressPercentage}%`;
+        }
+
+        function updateWeekProgress() {
+            const now = new Date();
+            const dayOfWeek = now.getDay(); // 0 (Sunday) to 6 (Saturday)
+            const daysSinceMonday = (dayOfWeek + 6) % 7; // 0 (Monday) to 6 (Sunday)
+            const weekProgressPercentage = (daysSinceMonday / 6) * 100;
+
+            document.getElementById('days-in-week').textContent = `${daysSinceMonday + 1}/7`;
+            document.getElementById('week-progress-bar').style.width = `${weekProgressPercentage}%`;
+        }
+
+        function updateProgressBars() {
+            updateYearProgress();
+            updateMonthProgress();
+            updateWeekProgress();
+        }
+
+        window.onload = function() {
+            updateProgressBars();
+            setInterval(updateProgressBars, 86400000); // Aktualizacja co 24 godziny
+        }
+    </script>
+</body>
+</html>
