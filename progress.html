@@ -89,38 +89,34 @@
             right: 10px;
             top: 5px;
             font-size: 14px;
-            color: white;
+            color: #888;
             font-weight: bold;
         }
 
         .small-button {
-            font-size: 85%;
+            font-size: 70%;
             padding: 3px 5px;
         }
     </style>
 </head>
 <body>
     <div class="progress-container">
-        <div class="progress-info inputs">
-            <label for="deadline">Deadline:</label>
-            <input type="date" id="deadline" oninput="updateDeadlineProgress()">
-            <input type="text" id="project-name" placeholder="Nazwa projektu">
-        </div>
-        
         <div class="progress-info">
             <div class="days-left">Pozostało: <span id="days-to-deadline">-</span> dni</div>
             <button class="small-button" onclick="toggleInputs()">Ukryj</button>
         </div>
 
-        <div class="project-display hidden">
-            <div class="project-name" id="project-display-name"></div>
-            <button class="small-button" onclick="toggleInputs()">Pokaż</button>
+        <div class="inputs hidden">
+            <label for="deadline">Deadline:</label>
+            <input type="date" id="deadline" oninput="updateDeadlineProgress()">
+            <input type="text" id="project-name" placeholder="Nazwa projektu">
         </div>
+
+        <div class="project-name hidden" id="project-display-name"></div>
         
         <div class="progress-bar">
-            <div id="deadline-progress-bar" class="progress-bar-inner">
-                <div class="project-name-on-bar" id="project-name-on-bar"></div>
-            </div>
+            <div id="deadline-progress-bar" class="progress-bar-inner"></div>
+            <div class="project-name-on-bar" id="project-name-on-bar"></div>
         </div>
 
         <div class="progress-bar">
@@ -138,10 +134,11 @@
                 const deadline = new Date(deadlineInput);
                 const totalTimeInMs = deadline - now;
                 const totalTimeInDays = Math.ceil(totalTimeInMs / (1000 * 60 * 60 * 24));
-                const deadlineProgressPercentage = (1 - (totalTimeInDays / 365)) * 100;
+                const maxDays = 365;
+                const deadlineProgressPercentage = (totalTimeInDays / maxDays) * 100;
 
                 document.getElementById('days-to-deadline').textContent = totalTimeInDays > 0 ? totalTimeInDays : 0;
-                document.getElementById('deadline-progress-bar').style.width = `${totalTimeInDays > 0 ? deadlineProgressPercentage : 0}%`;
+                document.getElementById('deadline-progress-bar').style.width = `${deadlineProgressPercentage > 100 ? 100 : deadlineProgressPercentage}%`;
 
                 document.getElementById('project-display-name').textContent = projectName;
                 document.getElementById('project-name-on-bar').textContent = projectName;
@@ -167,9 +164,15 @@
 
         function toggleInputs() {
             const inputs = document.querySelector('.inputs');
-            const projectDisplay = document.querySelector('.project-display');
+            const button = document.querySelector('.small-button');
+
             inputs.classList.toggle('hidden');
-            projectDisplay.classList.toggle('hidden');
+
+            if (inputs.classList.contains('hidden')) {
+                button.textContent = 'Pokaż';
+            } else {
+                button.textContent = 'Ukryj';
+            }
         }
 
         updateYearProgress();
