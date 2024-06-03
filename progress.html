@@ -37,6 +37,7 @@
             line-height: 30px;
             color: white;
             position: relative;
+            transition: width 0.5s;
         }
 
         .progress-info {
@@ -138,9 +139,11 @@
                 const totalTimeInMs = deadline - now;
                 const totalTimeInDays = Math.ceil(totalTimeInMs / (1000 * 60 * 60 * 24));
 
-                const startTimeInMs = deadline - new Date();
-                const totalProjectTime = (deadline - now);
-                const deadlineProgressPercentage = ((now - new Date()) / totalProjectTime) * 100;
+                // Calculate the total project duration from today to the deadline
+                const totalProjectDurationInMs = deadline - now;
+                const elapsedTimeInMs = now - new Date();
+
+                const deadlineProgressPercentage = (elapsedTimeInMs / totalProjectDurationInMs) * 100;
 
                 document.getElementById('days-to-deadline').textContent = totalTimeInDays > 0 ? totalTimeInDays : 0;
                 document.getElementById('deadline-progress-bar').style.width = `${deadlineProgressPercentage > 100 ? 100 : deadlineProgressPercentage}%`;
