@@ -39,12 +39,6 @@
             margin-top: 10px;
         }
 
-        .project-name {
-            margin: 10px 0;
-            font-size: 20px;
-            font-weight: bold;
-        }
-
         input, button {
             padding: 5px;
             margin: 5px;
@@ -54,7 +48,7 @@
         }
 
         input {
-            width: 200px;
+            width: 150px;
         }
 
         button {
@@ -64,23 +58,27 @@
 </head>
 <body>
     <div class="progress-container">
-        <div class="project-name">Nazwa Projektu</div>
         <div class="progress-info">
-            <div>Dni do terminu: <span id="days-to-deadline">-</span></div>
             <div>
-                <label for="deadline">Wpisz termin (format: RRRR-MM-DD):</label>
+                <label for="deadline">Deadline:</label>
                 <input type="date" id="deadline" oninput="updateDeadlineProgress()">
+                <input type="text" id="project-name" placeholder="Nazwa projektu">
+                <button onclick="toggleInputs()">Ukryj</button>
             </div>
         </div>
         
         <div class="progress-bar">
             <div id="deadline-progress-bar" class="progress-bar-inner"></div>
         </div>
+        <div class="progress-info">
+            <div>Pozostało <span id="days-to-deadline">-</span> dni</div>
+        </div>
     </div>
 
     <script>
         function updateDeadlineProgress() {
             const deadlineInput = document.getElementById('deadline').value;
+            const projectName = document.getElementById('project-name').value;
             if (deadlineInput) {
                 const now = new Date();
                 const deadline = new Date(deadlineInput);
@@ -94,6 +92,11 @@
                 document.getElementById('days-to-deadline').textContent = '-';
                 document.getElementById('deadline-progress-bar').style.width = '0%';
             }
+        }
+
+        function toggleInputs() {
+            const inputs = document.querySelector('.progress-info > div');
+            inputs.style.display = inputs.style.display === 'none' ? 'block' : 'none';
         }
     </script>
 </body>
