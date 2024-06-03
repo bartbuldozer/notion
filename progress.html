@@ -196,7 +196,7 @@
         function toggleInputs(id) {
             const inputs = document.getElementById('inputs-' + id);
             const progressBarContainer = document.getElementById('progress-bar-container-' + id);
-            const button = inputs.previousElementSibling.querySelector('.small-button');
+            const button = document.querySelector(`.progress-info:nth-of-type(${id * 2 - 1}) .small-button`);
 
             inputs.classList.toggle('hidden');
             progressBarContainer.classList.toggle('hidden');
@@ -223,8 +223,4 @@
         }
 
         function loadSavedData() {
-            for (let id = 1; id <= 3; id++) {
-                const projectName = getCookie(`project${id}-name`);
-                const deadline = getCookie(`project${id}-deadline`);
-                if (projectName && deadline) {
-                   
+            for
