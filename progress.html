@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress Bar</title>
+    <style>
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border: 1px solid #ccc;
+            border-radius: 25px;
+            overflow: hidden;
+        }
+
+        .progress-bar-inner {
+            height: 30px;
+            width: 0%;
+            background-color: #4caf50;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+        }
+
+        .progress-info {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Pasek Postępu</h1>
+    
+    <div class="progress-info">
+        <div>Dni w roku: <span id="year-progress"></span></div>
+        <div>Dni w tygodniu: <span id="week-progress"></span></div>
+        <div>
+            <label for="deadline">Wpisz termin (format: RRRR-MM-DD):</label>
+            <input type="date" id="deadline">
+            <button onclick="updateDeadlineProgress()">Zaktualizuj</button>
+        </div>
+        <div>Postęp do terminu: <span id="deadline-progress"></span></div>
+    </div>
+    
+    <div class="progress-bar">
+        <div id="year-progress-bar" class="progress-bar-inner"></div>
+    </div>
+    <div class="progress-bar" style="margin-top: 10px;">
+        <div id="week-progress-bar" class="progress-bar-inner"></div>
+    </div>
+    <div class="progress-bar" style="margin-top: 10px;">
+        <div id="deadline-progress-bar" class="progress-bar-inner"></div>
+    </div>
+
+    <script>
+        function updateProgressBars() {
+            const now = new Date();
+            const startOfYear = new Date(now.getFullYear(), 0, 1);
+            const endOfYear = new Date(now.getFullYear(), 11, 31);
+            const totalDaysInYear = (endOfYear - startOfYear) / (1000 * 60 * 60 * 24) + 1;
+            const dayOfYear = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
+            const yearProgressPercentage = (dayOfYear / totalDaysInYear) * 100;
+            
+            document.getElementById('year-progress').textContent = `${dayOfYear}/${Math.floor(totalDaysInYear)}`;
+            document.getElementById('year-progress-bar').style.width = `${yearProgressPercentage}%`;
+
+            const dayOfWeek = now.getDay();
+            const weekProgressPercentage = (dayOfWeek / 7) * 100;
+
+            document.getElementById('week-progress').textContent = `${dayOfWeek}/7`;
+            document.getElementById('week-progress-bar').style.width = `${weekProgressPercentage}%`;
+        }
+
+        function updateDeadlineProgress() {
+            const deadlineInput = document.getElementById('deadline').value;
+            if (deadlineInput) {
+                const now = new Date();
+                const deadline = new Date(deadlineInput);
+                const totalTime = (deadline - now) / (1000 * 60 * 60 * 24);
+                const totalTimeInDays = Math.ceil(totalTime);
+                const deadlineProgressPercentage = (1 - totalTimeInDays / 365) * 100;
+
+                document.getElementById('deadline-progress').textContent = `${totalTimeInDays} dni`;
+                document.getElementById('deadline-progress-bar').style.width = `${deadlineProgressPercentage}%`;
+            } else {
+                document.getElementById('deadline-progress').textContent = 'Brak terminu';
+                document.getElementById('deadline-progress-bar').style.width = '0%';
+            }
+        }
+
+        updateProgressBars();
+        setInterval(updateProgressBars, 86400000); // Aktualizacja co 24 godziny
+    </script>
+</body>
+</html>
