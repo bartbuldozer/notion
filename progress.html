@@ -118,9 +118,8 @@
         <div class="project-name hidden" id="project-display-name"></div>
         
         <div class="progress-bar">
-            <div id="deadline-progress-bar" class="progress-bar-inner">
-                <div class="project-name-on-bar" id="project-name-on-bar"></div>
-            </div>
+            <div id="deadline-progress-bar" class="progress-bar-inner"></div>
+            <div class="project-name-on-bar" id="project-name-on-bar"></div>
         </div>
 
         <div class="progress-bar">
@@ -138,12 +137,13 @@
                 const deadline = new Date(deadlineInput);
                 const totalTimeInMs = deadline - now;
                 const totalTimeInDays = Math.ceil(totalTimeInMs / (1000 * 60 * 60 * 24));
-                const totalDays = Math.ceil((deadline - new Date(now.getFullYear(), 0, 1)) / (1000 * 60 * 60 * 24));
 
-                const deadlineProgressPercentage = (totalTimeInDays / totalDays) * 100;
+                const startTimeInMs = deadline - new Date();
+                const totalProjectTime = (deadline - now);
+                const deadlineProgressPercentage = ((now - new Date()) / totalProjectTime) * 100;
 
                 document.getElementById('days-to-deadline').textContent = totalTimeInDays > 0 ? totalTimeInDays : 0;
-                document.getElementById('deadline-progress-bar').style.width = `${deadlineProgressPercentage}%`;
+                document.getElementById('deadline-progress-bar').style.width = `${deadlineProgressPercentage > 100 ? 100 : deadlineProgressPercentage}%`;
 
                 document.getElementById('project-display-name').textContent = projectName;
                 document.getElementById('project-name-on-bar').textContent = projectName;
