@@ -106,7 +106,7 @@
         </div>
         <div class="progress-bar hidden" id="progress-bar-container-1">
             <div class="progress-bar-inner">
-                <div id="days-remaining-on-bar-1"></div>
+                <div id="days-remaining-on-bar-1">Pozostało dni: -</div>
             </div>
         </div>
 
@@ -121,7 +121,7 @@
         </div>
         <div class="progress-bar hidden" id="progress-bar-container-2">
             <div class="progress-bar-inner">
-                <div id="days-remaining-on-bar-2"></div>
+                <div id="days-remaining-on-bar-2">Pozostało dni: -</div>
             </div>
         </div>
 
@@ -136,7 +136,7 @@
         </div>
         <div class="progress-bar hidden" id="progress-bar-container-3">
             <div class="progress-bar-inner">
-                <div id="days-remaining-on-bar-3"></div>
+                <div id="days-remaining-on-bar-3">Pozostało dni: -</div>
             </div>
         </div>
 
@@ -158,10 +158,12 @@
 
                 document.getElementById('project-header-' + id).textContent = `Projekt: ${projectName}`;
                 document.getElementById('days-remaining-on-bar-' + id).textContent = `Pozostało dni: ${totalTimeInDays > 0 ? totalTimeInDays : 0}`;
+                document.getElementById('days-remaining-on-bar-' + id).style.color = '#ffffff';
                 document.getElementById('days-to-deadline').textContent = totalTimeInDays > 0 ? totalTimeInDays : 0;
             } else {
                 document.getElementById('project-header-' + id).textContent = 'Projekt:';
-                document.getElementById('days-remaining-on-bar-' + id).textContent = '';
+                document.getElementById('days-remaining-on-bar-' + id).textContent = 'Pozostało dni: -';
+                document.getElementById('days-remaining-on-bar-' + id).style.color = '#ffffff';
                 document.getElementById('days-to-deadline').textContent = '-';
             }
         }
