@@ -36,6 +36,7 @@
             text-align: center;
             line-height: 30px;
             color: white;
+            position: relative;
         }
 
         .progress-info {
@@ -78,6 +79,15 @@
             top: 5px;
             font-size: 14px;
         }
+
+        .project-name-on-bar {
+            position: absolute;
+            right: 10px;
+            top: 5px;
+            font-size: 14px;
+            color: white;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -97,7 +107,9 @@
         
         <div class="days-left">Pozostało: <span id="days-to-deadline">-</span> dni</div>
         <div class="progress-bar">
-            <div id="deadline-progress-bar" class="progress-bar-inner"></div>
+            <div id="deadline-progress-bar" class="progress-bar-inner">
+                <div class="project-name-on-bar" id="project-name-on-bar"></div>
+            </div>
         </div>
 
         <div class="progress-bar">
@@ -121,10 +133,12 @@
                 document.getElementById('deadline-progress-bar').style.width = `${totalTimeInDays > 0 ? deadlineProgressPercentage : 0}%`;
 
                 document.getElementById('project-display-name').textContent = projectName;
+                document.getElementById('project-name-on-bar').textContent = projectName;
             } else {
                 document.getElementById('days-to-deadline').textContent = '-';
                 document.getElementById('deadline-progress-bar').style.width = '0%';
                 document.getElementById('project-display-name').textContent = '';
+                document.getElementById('project-name-on-bar').textContent = '';
             }
         }
 
