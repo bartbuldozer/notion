@@ -31,7 +31,7 @@
 
         .progress-bar-inner {
             height: 30px;
-            width: 0%;
+            width: 100%;
             background-color: #888;
             text-align: center;
             line-height: 30px;
@@ -77,29 +77,25 @@
             display: none;
         }
 
-        .days-in-year {
-            position: absolute;
-            right: 10px;
-            top: 5px;
-            font-size: 14px;
-        }
-
         .project-name-on-bar {
             position: absolute;
+            left: 10px;
+            top: 5px;
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .days-remaining-on-bar {
+            position: absolute;
             right: 10px;
             top: 5px;
             font-size: 14px;
-            color: #888;
-            transition: color 0.3s;
+            color: #fff;
         }
 
         .small-button {
             font-size: 55%;
             padding: 3px 5px;
-        }
-
-        .highlight {
-            color: #fff;
         }
     </style>
 </head>
@@ -110,22 +106,17 @@
             <button class="small-button" onclick="toggleInputs()">Ukryj</button>
         </div>
 
-        <div class="inputs hidden">
+        <div class="inputs">
             <label for="deadline">Deadline:</label>
             <input type="date" id="deadline" oninput="updateDeadlineProgress()">
             <input type="text" id="project-name" placeholder="Nazwa projektu">
         </div>
 
-        <div class="project-name hidden" id="project-display-name"></div>
-        
-        <div class="progress-bar">
-            <div id="deadline-progress-bar" class="progress-bar-inner"></div>
-            <div class="project-name-on-bar" id="project-name-on-bar"></div>
-        </div>
-
-        <div class="progress-bar">
-            <div id="year-progress-bar" class="progress-bar-inner"></div>
-            <div class="days-in-year" id="days-in-year">-</div>
+        <div class="progress-bar hidden" id="progress-bar-container">
+            <div class="progress-bar-inner">
+                <div class="project-name-on-bar" id="project-name-on-bar"></div>
+                <div class="days-remaining-on-bar" id="days-remaining-on-bar"></div>
+            </div>
         </div>
     </div>
 
@@ -136,70 +127,35 @@
             if (deadlineInput && projectName) {
                 const now = new Date();
                 const deadline = new Date(deadlineInput);
-
-                // Calculate the total time from now to the deadline in days
                 const totalTimeInMs = deadline - now;
                 const totalTimeInDays = Math.ceil(totalTimeInMs / (1000 * 60 * 60 * 24));
 
-                // Calculate the percentage progress
-                const startTime = new Date();
-                const elapsedTimeInMs = now - startTime;
-                const deadlineProgressPercentage = (elapsedTimeInMs / totalTimeInMs) * 100;
-
                 document.getElementById('days-to-deadline').textContent = totalTimeInDays > 0 ? totalTimeInDays : 0;
-                document.getElementById('deadline-progress-bar').style.width = `${Math.min(deadlineProgressPercentage, 100)}%`;
-
-                document.getElementById('project-display-name').textContent = projectName;
-                document.getElementById('project-name-on-bar').textContent = projectName;
-
-                // Change text color based on bar width
-                const bar = document.getElementById('deadline-progress-bar');
-                const projectNameOnBar = document.getElementById('project-name-on-bar');
-                const daysToDeadline = document.getElementById('days-to-deadline');
-
-                if (bar.offsetWidth > projectNameOnBar.offsetLeft) {
-                    projectNameOnBar.classList.add('highlight');
-                    daysToDeadline.parentNode.classList.add('highlight');
-                } else {
-                    projectNameOnBar.classList.remove('highlight');
-                    daysToDeadline.parentNode.classList.remove('highlight');
-                }
+                document.getElementById('project-name-on-bar').textContent = `Projekt: ${projectName}`;
+                document.getElementById('days-remaining-on-bar').textContent = `Pozostało dni: ${totalTimeInDays > 0 ? totalTimeInDays : 0}`;
             } else {
                 document.getElementById('days-to-deadline').textContent = '-';
-                document.getElementById('deadline-progress-bar').style.width = '0%';
-                document.getElementById('project-display-name').textContent = '';
                 document.getElementById('project-name-on-bar').textContent = '';
+                document.getElementById('days-remaining-on-bar').textContent = '';
             }
-        }
-
-        function updateYearProgress() {
-            const now = new Date();
-            const startOfYear = new Date(now.getFullYear(), 0, 1);
-            const endOfYear = new Date(now.getFullYear(), 11, 31);
-            const totalDaysInYear = (endOfYear - startOfYear) / (1000 * 60 * 60 * 24) + 1;
-            const dayOfYear = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
-            const yearProgressPercentage = (dayOfYear / totalDaysInYear) * 100;
-
-            document.getElementById('days-in-year').textContent = `${dayOfYear}/365`;
-            document.getElementById('year-progress-bar').style.width = `${yearProgressPercentage}%`;
         }
 
         function toggleInputs() {
             const inputs = document.querySelector('.inputs');
+            const progressBarContainer = document.getElementById('progress-bar-container');
             const button = document.querySelector('.small-button');
 
             inputs.classList.toggle('hidden');
+            progressBarContainer.classList.toggle('hidden');
 
             if (inputs.classList.contains('hidden')) {
                 button.textContent = 'Pokaż';
             } else {
                 button.textContent = 'Ukryj';
             }
-        }
 
-        updateYearProgress();
-        setInterval(updateYearProgress, 86400000); // Aktualizacja co 24 godziny
-        setInterval(updateDeadlineProgress, 1000); // Aktualizacja co sekundę
+            updateDeadlineProgress(); // Update progress bar when toggling inputs
+        }
     </script>
 </body>
 </html>
