@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pasek Postępu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: transparent;
             color: #888;
             text-align: center;
@@ -24,6 +25,7 @@
             border: 1px solid #888;
             border-radius: 25px;
             overflow: hidden;
+            margin-bottom: 10px;
         }
 
         .progress-bar-inner {
@@ -37,6 +39,12 @@
 
         .progress-info {
             margin-top: 10px;
+        }
+
+        .project-name {
+            margin: 10px 0;
+            font-size: 20px;
+            font-weight: bold;
         }
 
         input, button {
@@ -54,16 +62,24 @@
         button {
             cursor: pointer;
         }
+
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="progress-container">
         <div class="progress-info">
-            <div>
+            <div class="inputs">
                 <label for="deadline">Deadline:</label>
                 <input type="date" id="deadline" oninput="updateDeadlineProgress()">
                 <input type="text" id="project-name" placeholder="Nazwa projektu">
                 <button onclick="toggleInputs()">Ukryj</button>
+            </div>
+            <div class="project-display hidden">
+                <div class="project-name" id="project-display-name"></div>
+                <button onclick="toggleInputs()">Pokaż</button>
             </div>
         </div>
         
@@ -72,6 +88,13 @@
         </div>
         <div class="progress-info">
             <div>Pozostało <span id="days-to-deadline">-</span> dni</div>
+        </div>
+        
+        <div class="progress-bar">
+            <div id="year-progress-bar" class="progress-bar-inner"></div>
+        </div>
+        <div class="progress-info">
+            <div>Minęło dni w roku: <span id="days-in-year">-</span></div>
         </div>
     </div>
 
@@ -88,16 +111,36 @@
 
                 document.getElementById('days-to-deadline').textContent = totalTimeInDays > 0 ? totalTimeInDays : 0;
                 document.getElementById('deadline-progress-bar').style.width = `${totalTimeInDays > 0 ? deadlineProgressPercentage : 0}%`;
+
+                document.getElementById('project-display-name').textContent = projectName;
             } else {
                 document.getElementById('days-to-deadline').textContent = '-';
                 document.getElementById('deadline-progress-bar').style.width = '0%';
+                document.getElementById('project-display-name').textContent = '';
             }
         }
 
-        function toggleInputs() {
-            const inputs = document.querySelector('.progress-info > div');
-            inputs.style.display = inputs.style.display === 'none' ? 'block' : 'none';
+        function updateYearProgress() {
+            const now = new Date();
+            const startOfYear = new Date(now.getFullYear(), 0, 1);
+            const endOfYear = new Date(now.getFullYear(), 11, 31);
+            const totalDaysInYear = (endOfYear - startOfYear) / (1000 * 60 * 60 * 24) + 1;
+            const dayOfYear = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
+            const yearProgressPercentage = (dayOfYear / totalDaysInYear) * 100;
+
+            document.getElementById('days-in-year').textContent = dayOfYear;
+            document.getElementById('year-progress-bar').style.width = `${yearProgressPercentage}%`;
         }
+
+        function toggleInputs() {
+            const inputs = document.querySelector('.inputs');
+            const projectDisplay = document.querySelector('.project-display');
+            inputs.classList.toggle('hidden');
+            projectDisplay.classList.toggle('hidden');
+        }
+
+        updateYearProgress();
+        setInterval(updateYearProgress, 86400000); // Aktualizacja co 24 godziny
     </script>
 </body>
 </html>
