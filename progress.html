@@ -102,7 +102,7 @@
         <div class="inputs" id="inputs-1">
             <label for="deadline-1">Deadline:</label>
             <input type="date" id="deadline-1" oninput="updateDeadlineProgress('1')">
-            <input type="text" id="project-name-1" placeholder="Nazwa projektu">
+            <input type="text" id="project-name-1" placeholder="Nazwa projektu" oninput="updateDeadlineProgress('1')">
         </div>
         <div class="progress-bar hidden" id="progress-bar-container-1">
             <div class="progress-bar-inner">
@@ -117,7 +117,7 @@
         <div class="inputs" id="inputs-2">
             <label for="deadline-2">Deadline:</label>
             <input type="date" id="deadline-2" oninput="updateDeadlineProgress('2')">
-            <input type="text" id="project-name-2" placeholder="Nazwa projektu">
+            <input type="text" id="project-name-2" placeholder="Nazwa projektu" oninput="updateDeadlineProgress('2')">
         </div>
         <div class="progress-bar hidden" id="progress-bar-container-2">
             <div class="progress-bar-inner">
@@ -132,7 +132,7 @@
         <div class="inputs" id="inputs-3">
             <label for="deadline-3">Deadline:</label>
             <input type="date" id="deadline-3" oninput="updateDeadlineProgress('3')">
-            <input type="text" id="project-name-3" placeholder="Nazwa projektu">
+            <input type="text" id="project-name-3" placeholder="Nazwa projektu" oninput="updateDeadlineProgress('3')">
         </div>
         <div class="progress-bar hidden" id="progress-bar-container-3">
             <div class="progress-bar-inner">
@@ -159,19 +159,21 @@
                 document.getElementById('project-header-' + id).textContent = `Projekt: ${projectName}`;
                 document.getElementById('days-remaining-on-bar-' + id).textContent = `Pozostało dni: ${totalTimeInDays > 0 ? totalTimeInDays : 0}`;
                 document.getElementById('days-remaining-on-bar-' + id).style.color = '#ffffff';
-                document.getElementById('days-to-deadline').textContent = totalTimeInDays > 0 ? totalTimeInDays : 0;
+                localStorage.setItem(`project${id}-name`, projectName);
+                localStorage.setItem(`project${id}-deadline`, deadlineInput);
             } else {
                 document.getElementById('project-header-' + id).textContent = 'Projekt:';
                 document.getElementById('days-remaining-on-bar-' + id).textContent = 'Pozostało dni: -';
                 document.getElementById('days-remaining-on-bar-' + id).style.color = '#ffffff';
-                document.getElementById('days-to-deadline').textContent = '-';
+                localStorage.removeItem(`project${id}-name`);
+                localStorage.removeItem(`project${id}-deadline`);
             }
         }
 
         function toggleInputs(id) {
             const inputs = document.getElementById('inputs-' + id);
             const progressBarContainer = document.getElementById('progress-bar-container-' + id);
-            const button = inputs.nextElementSibling.querySelector('.small-button');
+            const button = inputs.previousElementSibling.querySelector('.small-button');
 
             inputs.classList.toggle('hidden');
             progressBarContainer.classList.toggle('hidden');
@@ -197,8 +199,23 @@
             document.getElementById('year-progress-bar').style.width = `${yearProgressPercentage}%`;
         }
 
-        updateYearProgress();
-        setInterval(updateYearProgress, 86400000); // Aktualizacja co 24 godziny
+        function loadSavedData() {
+            for (let id = 1; id <= 3; id++) {
+                const projectName = localStorage.getItem(`project${id}-name`);
+                const deadline = localStorage.getItem(`project${id}-deadline`);
+                if (projectName && deadline) {
+                    document.getElementById(`project-name-${id}`).value = projectName;
+                    document.getElementById(`deadline-${id}`).value = deadline;
+                    updateDeadlineProgress(id);
+                }
+            }
+        }
+
+        window.onload = function() {
+            updateYearProgress();
+            setInterval(updateYearProgress, 86400000); // Aktualizacja co 24 godziny
+            loadSavedData();
+        }
     </script>
 </body>
 </html>
