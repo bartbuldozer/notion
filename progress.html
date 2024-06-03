@@ -41,6 +41,9 @@
 
         .progress-info {
             margin-top: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         .project-name {
@@ -51,6 +54,7 @@
 
         .days-left {
             margin-bottom: 5px;
+            display: inline-block;
         }
 
         input, button {
@@ -88,24 +92,31 @@
             color: white;
             font-weight: bold;
         }
+
+        .small-button {
+            font-size: 85%;
+            padding: 3px 5px;
+        }
     </style>
 </head>
 <body>
     <div class="progress-container">
-        <div class="progress-info">
-            <div class="inputs">
-                <label for="deadline">Deadline:</label>
-                <input type="date" id="deadline" oninput="updateDeadlineProgress()">
-                <input type="text" id="project-name" placeholder="Nazwa projektu">
-                <button onclick="toggleInputs()">Ukryj</button>
-            </div>
-            <div class="project-display hidden">
-                <div class="project-name" id="project-display-name"></div>
-                <button onclick="toggleInputs()">Pokaż</button>
-            </div>
+        <div class="progress-info inputs">
+            <label for="deadline">Deadline:</label>
+            <input type="date" id="deadline" oninput="updateDeadlineProgress()">
+            <input type="text" id="project-name" placeholder="Nazwa projektu">
         </div>
         
-        <div class="days-left">Pozostało: <span id="days-to-deadline">-</span> dni</div>
+        <div class="progress-info">
+            <div class="days-left">Pozostało: <span id="days-to-deadline">-</span> dni</div>
+            <button class="small-button" onclick="toggleInputs()">Ukryj</button>
+        </div>
+
+        <div class="project-display hidden">
+            <div class="project-name" id="project-display-name"></div>
+            <button class="small-button" onclick="toggleInputs()">Pokaż</button>
+        </div>
+        
         <div class="progress-bar">
             <div id="deadline-progress-bar" class="progress-bar-inner">
                 <div class="project-name-on-bar" id="project-name-on-bar"></div>
