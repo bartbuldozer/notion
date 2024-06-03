@@ -147,6 +147,29 @@
     </div>
 
     <script>
+        function setCookie(name, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days*24*60*60*1000));
+            const expires = "expires=" + d.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+
+        function getCookie(name) {
+            const cname = name + "=";
+            const decodedCookie = decodeURIComponent(document.cookie);
+            const ca = decodedCookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(cname) == 0) {
+                    return c.substring(cname.length, c.length);
+                }
+            }
+            return "";
+        }
+
         function updateDeadlineProgress(id) {
             const deadlineInput = document.getElementById('deadline-' + id).value;
             const projectName = document.getElementById('project-name-' + id).value;
@@ -159,14 +182,14 @@
                 document.getElementById('project-header-' + id).textContent = `Projekt: ${projectName}`;
                 document.getElementById('days-remaining-on-bar-' + id).textContent = `Pozostało dni: ${totalTimeInDays > 0 ? totalTimeInDays : 0}`;
                 document.getElementById('days-remaining-on-bar-' + id).style.color = '#ffffff';
-                localStorage.setItem(`project${id}-name`, projectName);
-                localStorage.setItem(`project${id}-deadline`, deadlineInput);
+                setCookie(`project${id}-name`, projectName, 365);
+                setCookie(`project${id}-deadline`, deadlineInput, 365);
             } else {
                 document.getElementById('project-header-' + id).textContent = 'Projekt:';
                 document.getElementById('days-remaining-on-bar-' + id).textContent = 'Pozostało dni: -';
                 document.getElementById('days-remaining-on-bar-' + id).style.color = '#ffffff';
-                localStorage.removeItem(`project${id}-name`);
-                localStorage.removeItem(`project${id}-deadline`);
+                setCookie(`project${id}-name`, "", -1);
+                setCookie(`project${id}-deadline`, "", -1);
             }
         }
 
@@ -201,21 +224,7 @@
 
         function loadSavedData() {
             for (let id = 1; id <= 3; id++) {
-                const projectName = localStorage.getItem(`project${id}-name`);
-                const deadline = localStorage.getItem(`project${id}-deadline`);
+                const projectName = getCookie(`project${id}-name`);
+                const deadline = getCookie(`project${id}-deadline`);
                 if (projectName && deadline) {
-                    document.getElementById(`project-name-${id}`).value = projectName;
-                    document.getElementById(`deadline-${id}`).value = deadline;
-                    updateDeadlineProgress(id);
-                }
-            }
-        }
-
-        window.onload = function() {
-            updateYearProgress();
-            setInterval(updateYearProgress, 86400000); // Aktualizacja co 24 godziny
-            loadSavedData();
-        }
-    </script>
-</body>
-</html>
+                   
