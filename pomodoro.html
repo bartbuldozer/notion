@@ -113,7 +113,7 @@
                     } else {
                         clearInterval(timer);
                         isRunning = false;
-                        document.getElementById('alarm-sound').play();
+                        playSound();
                         alert('Czas minął!');
                     }
                 }, 1000);
@@ -163,6 +163,13 @@
             document.getElementById('short-break-btn').classList.remove('selected');
             document.getElementById('long-break-btn').classList.remove('selected');
             document.getElementById(buttonId).classList.add('selected');
+        }
+
+        function playSound() {
+            const audio = document.getElementById('alarm-sound');
+            audio.play().catch(error => {
+                console.log('Playback error:', error);
+            });
         }
 
         updateTimerDisplay();
