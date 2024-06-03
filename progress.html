@@ -89,11 +89,16 @@
             top: 5px;
             font-size: 14px;
             color: #888;
+            transition: color 0.3s;
         }
 
         .small-button {
             font-size: 55%;
             padding: 3px 5px;
+        }
+
+        .highlight {
+            color: #fff;
         }
     </style>
 </head>
@@ -113,8 +118,9 @@
         <div class="project-name hidden" id="project-display-name"></div>
         
         <div class="progress-bar">
-            <div id="deadline-progress-bar" class="progress-bar-inner"></div>
-            <div class="project-name-on-bar" id="project-name-on-bar"></div>
+            <div id="deadline-progress-bar" class="progress-bar-inner">
+                <div class="project-name-on-bar" id="project-name-on-bar"></div>
+            </div>
         </div>
 
         <div class="progress-bar">
@@ -127,20 +133,33 @@
         function updateDeadlineProgress() {
             const deadlineInput = document.getElementById('deadline').value;
             const projectName = document.getElementById('project-name').value;
-            if (deadlineInput) {
+            if (deadlineInput && projectName) {
                 const now = new Date();
                 const deadline = new Date(deadlineInput);
                 const totalTimeInMs = deadline - now;
                 const totalTimeInDays = Math.ceil(totalTimeInMs / (1000 * 60 * 60 * 24));
+                const totalDays = Math.ceil((deadline - new Date(now.getFullYear(), 0, 1)) / (1000 * 60 * 60 * 24));
 
-                // Jeśli termin przekracza 365 dni, obliczamy proporcję dla 365 dni
-                const deadlineProgressPercentage = totalTimeInDays > 365 ? 100 : (totalTimeInDays / 365) * 100;
+                const deadlineProgressPercentage = (totalTimeInDays / totalDays) * 100;
 
                 document.getElementById('days-to-deadline').textContent = totalTimeInDays > 0 ? totalTimeInDays : 0;
                 document.getElementById('deadline-progress-bar').style.width = `${deadlineProgressPercentage}%`;
 
                 document.getElementById('project-display-name').textContent = projectName;
                 document.getElementById('project-name-on-bar').textContent = projectName;
+
+                // Change text color based on bar width
+                const bar = document.getElementById('deadline-progress-bar');
+                const projectNameOnBar = document.getElementById('project-name-on-bar');
+                const daysToDeadline = document.getElementById('days-to-deadline');
+
+                if (bar.offsetWidth > projectNameOnBar.offsetLeft) {
+                    projectNameOnBar.classList.add('highlight');
+                    daysToDeadline.parentNode.classList.add('highlight');
+                } else {
+                    projectNameOnBar.classList.remove('highlight');
+                    daysToDeadline.parentNode.classList.remove('highlight');
+                }
             } else {
                 document.getElementById('days-to-deadline').textContent = '-';
                 document.getElementById('deadline-progress-bar').style.width = '0%';
@@ -176,6 +195,7 @@
 
         updateYearProgress();
         setInterval(updateYearProgress, 86400000); // Aktualizacja co 24 godziny
+        setInterval(updateDeadlineProgress, 1000); // Aktualizacja co sekundę
     </script>
 </body>
 </html>
