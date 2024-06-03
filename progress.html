@@ -26,6 +26,7 @@
             border-radius: 25px;
             overflow: hidden;
             margin-bottom: 10px;
+            position: relative;
         }
 
         .progress-bar-inner {
@@ -38,13 +39,17 @@
         }
 
         .progress-info {
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         .project-name {
-            margin: 10px 0;
-            font-size: 20px;
+            font-size: 22px;
             font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .days-left {
+            margin-bottom: 5px;
         }
 
         input, button {
@@ -66,6 +71,13 @@
         .hidden {
             display: none;
         }
+
+        .days-in-year {
+            position: absolute;
+            right: 10px;
+            top: 5px;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -83,18 +95,14 @@
             </div>
         </div>
         
+        <div class="days-left">Pozostało: <span id="days-to-deadline">-</span> dni</div>
         <div class="progress-bar">
             <div id="deadline-progress-bar" class="progress-bar-inner"></div>
         </div>
-        <div class="progress-info">
-            <div>Pozostało <span id="days-to-deadline">-</span> dni</div>
-        </div>
-        
+
         <div class="progress-bar">
             <div id="year-progress-bar" class="progress-bar-inner"></div>
-        </div>
-        <div class="progress-info">
-            <div>Minęło dni w roku: <span id="days-in-year">-</span></div>
+            <div class="days-in-year" id="days-in-year">-</div>
         </div>
     </div>
 
@@ -128,7 +136,7 @@
             const dayOfYear = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
             const yearProgressPercentage = (dayOfYear / totalDaysInYear) * 100;
 
-            document.getElementById('days-in-year').textContent = dayOfYear;
+            document.getElementById('days-in-year').textContent = `${dayOfYear}/365`;
             document.getElementById('year-progress-bar').style.width = `${yearProgressPercentage}%`;
         }
 
