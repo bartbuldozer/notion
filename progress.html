@@ -25,7 +25,7 @@
             border: 1px solid #888;
             border-radius: 25px;
             overflow: hidden;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             position: relative;
         }
 
@@ -38,22 +38,25 @@
             color: white;
             position: relative;
             transition: width 0.5s;
-        }
-
-        .progress-info {
-            margin-top: 5px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .project-name {
-            font-size: 14px;
+        .progress-info {
+            margin-top: 5px;
             margin-bottom: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .project-header {
+            font-size: 16px;
+            margin-right: 10px;
         }
 
         .days-left {
-            margin-bottom: 5px;
             display: inline-block;
         }
 
@@ -77,20 +80,11 @@
             display: none;
         }
 
-        .project-name-on-bar {
-            position: absolute;
-            left: 10px;
-            top: 5px;
-            font-size: 14px;
-            color: #fff;
-        }
-
-        .days-remaining-on-bar {
+        .days-in-year {
             position: absolute;
             right: 10px;
             top: 5px;
             font-size: 14px;
-            color: #fff;
         }
 
         .small-button {
@@ -102,48 +96,80 @@
 <body>
     <div class="progress-container">
         <div class="progress-info">
-            <div class="days-left">Pozostało: <span id="days-to-deadline">-</span> dni</div>
-            <button class="small-button" onclick="toggleInputs()">Ukryj</button>
+            <div class="project-header" id="project-header-1">Projekt:</div>
+            <button class="small-button" onclick="toggleInputs('1')">Ukryj</button>
         </div>
-
-        <div class="inputs">
-            <label for="deadline">Deadline:</label>
-            <input type="date" id="deadline" oninput="updateDeadlineProgress()">
-            <input type="text" id="project-name" placeholder="Nazwa projektu">
+        <div class="inputs" id="inputs-1">
+            <label for="deadline-1">Deadline:</label>
+            <input type="date" id="deadline-1" oninput="updateDeadlineProgress('1')">
+            <input type="text" id="project-name-1" placeholder="Nazwa projektu">
         </div>
-
-        <div class="progress-bar hidden" id="progress-bar-container">
+        <div class="progress-bar hidden" id="progress-bar-container-1">
             <div class="progress-bar-inner">
-                <div class="project-name-on-bar" id="project-name-on-bar"></div>
-                <div class="days-remaining-on-bar" id="days-remaining-on-bar"></div>
+                <div id="days-remaining-on-bar-1"></div>
             </div>
+        </div>
+
+        <div class="progress-info">
+            <div class="project-header" id="project-header-2">Projekt:</div>
+            <button class="small-button" onclick="toggleInputs('2')">Ukryj</button>
+        </div>
+        <div class="inputs" id="inputs-2">
+            <label for="deadline-2">Deadline:</label>
+            <input type="date" id="deadline-2" oninput="updateDeadlineProgress('2')">
+            <input type="text" id="project-name-2" placeholder="Nazwa projektu">
+        </div>
+        <div class="progress-bar hidden" id="progress-bar-container-2">
+            <div class="progress-bar-inner">
+                <div id="days-remaining-on-bar-2"></div>
+            </div>
+        </div>
+
+        <div class="progress-info">
+            <div class="project-header" id="project-header-3">Projekt:</div>
+            <button class="small-button" onclick="toggleInputs('3')">Ukryj</button>
+        </div>
+        <div class="inputs" id="inputs-3">
+            <label for="deadline-3">Deadline:</label>
+            <input type="date" id="deadline-3" oninput="updateDeadlineProgress('3')">
+            <input type="text" id="project-name-3" placeholder="Nazwa projektu">
+        </div>
+        <div class="progress-bar hidden" id="progress-bar-container-3">
+            <div class="progress-bar-inner">
+                <div id="days-remaining-on-bar-3"></div>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div id="year-progress-bar" class="progress-bar-inner"></div>
+            <div class="days-in-year" id="days-in-year">-</div>
         </div>
     </div>
 
     <script>
-        function updateDeadlineProgress() {
-            const deadlineInput = document.getElementById('deadline').value;
-            const projectName = document.getElementById('project-name').value;
+        function updateDeadlineProgress(id) {
+            const deadlineInput = document.getElementById('deadline-' + id).value;
+            const projectName = document.getElementById('project-name-' + id).value;
             if (deadlineInput && projectName) {
                 const now = new Date();
                 const deadline = new Date(deadlineInput);
                 const totalTimeInMs = deadline - now;
                 const totalTimeInDays = Math.ceil(totalTimeInMs / (1000 * 60 * 60 * 24));
 
+                document.getElementById('project-header-' + id).textContent = `Projekt: ${projectName}`;
+                document.getElementById('days-remaining-on-bar-' + id).textContent = `Pozostało dni: ${totalTimeInDays > 0 ? totalTimeInDays : 0}`;
                 document.getElementById('days-to-deadline').textContent = totalTimeInDays > 0 ? totalTimeInDays : 0;
-                document.getElementById('project-name-on-bar').textContent = `Projekt: ${projectName}`;
-                document.getElementById('days-remaining-on-bar').textContent = `Pozostało dni: ${totalTimeInDays > 0 ? totalTimeInDays : 0}`;
             } else {
+                document.getElementById('project-header-' + id).textContent = 'Projekt:';
+                document.getElementById('days-remaining-on-bar-' + id).textContent = '';
                 document.getElementById('days-to-deadline').textContent = '-';
-                document.getElementById('project-name-on-bar').textContent = '';
-                document.getElementById('days-remaining-on-bar').textContent = '';
             }
         }
 
-        function toggleInputs() {
-            const inputs = document.querySelector('.inputs');
-            const progressBarContainer = document.getElementById('progress-bar-container');
-            const button = document.querySelector('.small-button');
+        function toggleInputs(id) {
+            const inputs = document.getElementById('inputs-' + id);
+            const progressBarContainer = document.getElementById('progress-bar-container-' + id);
+            const button = inputs.nextElementSibling.querySelector('.small-button');
 
             inputs.classList.toggle('hidden');
             progressBarContainer.classList.toggle('hidden');
@@ -154,8 +180,23 @@
                 button.textContent = 'Ukryj';
             }
 
-            updateDeadlineProgress(); // Update progress bar when toggling inputs
+            updateDeadlineProgress(id); // Update progress bar when toggling inputs
         }
+
+        function updateYearProgress() {
+            const now = new Date();
+            const startOfYear = new Date(now.getFullYear(), 0, 1);
+            const endOfYear = new Date(now.getFullYear(), 11, 31);
+            const totalDaysInYear = (endOfYear - startOfYear) / (1000 * 60 * 60 * 24) + 1;
+            const dayOfYear = Math.floor((now - startOfYear) / (1000 * 60 * 60 * 24)) + 1;
+            const yearProgressPercentage = (dayOfYear / totalDaysInYear) * 100;
+
+            document.getElementById('days-in-year').textContent = `${dayOfYear}/365`;
+            document.getElementById('year-progress-bar').style.width = `${yearProgressPercentage}%`;
+        }
+
+        updateYearProgress();
+        setInterval(updateYearProgress, 86400000); // Aktualizacja co 24 godziny
     </script>
 </body>
 </html>
