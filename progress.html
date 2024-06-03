@@ -136,18 +136,18 @@
             if (deadlineInput && projectName) {
                 const now = new Date();
                 const deadline = new Date(deadlineInput);
+
+                // Calculate the total time from now to the deadline in days
                 const totalTimeInMs = deadline - now;
                 const totalTimeInDays = Math.ceil(totalTimeInMs / (1000 * 60 * 60 * 24));
 
-                // Calculate the elapsed time and total project time
-                const startTimeInMs = now - new Date();
-                const totalProjectDurationInMs = deadline - now;
-                const elapsedTimeInMs = now - new Date();
-                
-                const deadlineProgressPercentage = ((now - new Date()) / totalProjectDurationInMs) * 100;
+                // Calculate the percentage progress
+                const startTime = new Date();
+                const elapsedTimeInMs = now - startTime;
+                const deadlineProgressPercentage = (elapsedTimeInMs / totalTimeInMs) * 100;
 
                 document.getElementById('days-to-deadline').textContent = totalTimeInDays > 0 ? totalTimeInDays : 0;
-                document.getElementById('deadline-progress-bar').style.width = `${deadlineProgressPercentage > 100 ? 100 : deadlineProgressPercentage}%`;
+                document.getElementById('deadline-progress-bar').style.width = `${Math.min(deadlineProgressPercentage, 100)}%`;
 
                 document.getElementById('project-display-name').textContent = projectName;
                 document.getElementById('project-name-on-bar').textContent = projectName;
