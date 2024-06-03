@@ -47,8 +47,7 @@
         }
 
         .project-name {
-            font-size: 22px;
-            font-weight: bold;
+            font-size: 14px;
             margin-bottom: 5px;
         }
 
@@ -90,11 +89,10 @@
             top: 5px;
             font-size: 14px;
             color: #888;
-            font-weight: bold;
         }
 
         .small-button {
-            font-size: 70%;
+            font-size: 55%;
             padding: 3px 5px;
         }
     </style>
@@ -134,11 +132,12 @@
                 const deadline = new Date(deadlineInput);
                 const totalTimeInMs = deadline - now;
                 const totalTimeInDays = Math.ceil(totalTimeInMs / (1000 * 60 * 60 * 24));
-                const maxDays = 365;
-                const deadlineProgressPercentage = (totalTimeInDays / maxDays) * 100;
+
+                // Jeśli termin przekracza 365 dni, obliczamy proporcję dla 365 dni
+                const deadlineProgressPercentage = totalTimeInDays > 365 ? 100 : (totalTimeInDays / 365) * 100;
 
                 document.getElementById('days-to-deadline').textContent = totalTimeInDays > 0 ? totalTimeInDays : 0;
-                document.getElementById('deadline-progress-bar').style.width = `${deadlineProgressPercentage > 100 ? 100 : deadlineProgressPercentage}%`;
+                document.getElementById('deadline-progress-bar').style.width = `${deadlineProgressPercentage}%`;
 
                 document.getElementById('project-display-name').textContent = projectName;
                 document.getElementById('project-name-on-bar').textContent = projectName;
